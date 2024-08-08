@@ -3,14 +3,14 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import logo from '../../../../assets/img/4 3.png'
 import axios from 'axios';
 import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-export default function Login() {
-
+import styles from "../../auth.module.css";
+import { USERS_URL } from '../../../../constant/Api';
+import { email_valid, password_valid } from '../../../../constant/Validation';
+export default function Login({saveLoginData}) {
   let navigate=useNavigate()
-
   let{
     register, 
     handleSubmit,
@@ -20,10 +20,12 @@ export default function Login() {
 
     let submit=async (data)=>{
       try{
-        let res=await axios.post("https://upskilling-egypt.com:3006/api/v1/Users/Login",data)
-        toast.success("Login Success")
+        let res=await axios.post(USERS_URL.login,data)
+        const token=res.data.token
+        localStorage.setItem("token",token)
+        saveLoginData();
+        toast.success("Login Successfully")
         navigate("/dashboard")
-        console.log(res.data.token)
       }
       catch(err){
         if(err.response.status===404){
@@ -36,65 +38,49 @@ export default function Login() {
     }
 
   return (   
-    <div className="auth-container">
-      <div className="row  vh-100 justify-content-center align-items-center bg-overlay">
-        <div className=" col-md-5 bg-white py-5 rounded rounded-2">
-          <div className='px-5'>
-            <div className="text-center img">
-            <img src={logo} alt="login"  className='w-50 img-fluid'/>
-            </div>
-            <div className="title mb-3">
-              <h3>Log in</h3>
-              <p>Welcome back! please enter your details</p>
-            </div>
-            <form onSubmit={handleSubmit(submit)}>
-      <InputGroup className="my-4">
+    <form onSubmit={handleSubmit(submit)}>
+      <div className={styles["form-auth"]}>
+          <h3>Log in</h3>
+          <p>Welcome back! please enter your details</p>
+        </div>
+        <div className="mb-3">
+        <InputGroup>
         <InputGroup.Text id="basic-addon1"><i className="fa-solid fa-envelope"></i></InputGroup.Text>
         <Form.Control
+          style={{height:"56px"}}
+          type='email'
           placeholder="Enter Your E-mail"
           aria-label="email"
           aria-describedby="basic-addon1"
-          {...register("email",{
-            required:"Email is Required",
-            pattern:{
-              value:/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
-              message:"Email is not matched"
-            }
-          })}
+          {...register("email",email_valid)}
         />        
       </InputGroup>
 
       {errors.email&&<p className='text-danger'>{errors.email.message}</p>}
-
-
-      <InputGroup className="mb-3">
+    </div>
+    <div className="mb-1">
+    <InputGroup>
         <InputGroup.Text id="basic-addon2"><i className="fa-solid fa-key"></i></InputGroup.Text>
         <Form.Control
+          type="password"
+          style={{height:"56px"}}
           placeholder="Enter Your Password"
           aria-label="password"
           aria-describedby="basic-addon2"
-          {...register("password",{
-            required:"password is required",
-            pattern:{
-              message:"Enter a valid password"
-            }
-          })}
+          {...register("password",password_valid)}
         />
       </InputGroup>
-      
       {errors.password&&<p className='text-danger'>{errors.password.message}</p>}
+    </div>
 
-      <div className="link d-flex justify-content-between">
-        <Link to={"/register"} className='text-success text-decoration-none'>Register Now?</Link>
-        <Link to={"/forgetpassword"} className='text-success text-decoration-none'>ForgetPassword</Link>
+
+      <div className="link d-flex justify-content-between mb-4">
+        <Link to={"/register"} className='text-dark text-decoration-none'>Register Now?</Link>
+        <Link to={"/forget-password"} className='text-success text-decoration-none'>ForgetPassword</Link>
       </div>
-
       <button type='submit' className="btn btn-success d-block w-100 my-3">Login</button>
             </form>
-            </div>
-        </div>
-      </div>
-    </div>
+
 
   )
 }

@@ -16,7 +16,23 @@
 .title p{
     color:rgb(122, 121, 121);
 }
-.sidebar {
-    height: 100vh;
-    position: fixed;
-  }
+.sidebarContainer .ps-sidebar-container{
+    background-color:rgba(31, 38, 62, 1);
+    border-top-right-radius:58px ;
+}
+.sidebarContainer .ps-menu-button{
+    color: #fff !important;
+}
+.sidebarContainer .ps-menu-button:hover {
+    /* background-color:rgba(47,140,96,0.5) !important; */
+    background-color:rgba(0, 146, 71, 0.1) !important;
+}
+.sidebarContainer .bg-success{
+    background-color: none;
+}
+.sidebarContainer .firstItem .ps-menu-button:hover{
+    background:transparent !important;
+}
+.form-control{
+    height: 56px;
+}

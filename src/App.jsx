@@ -12,26 +12,42 @@ import NotFound from './Modules/Shared/Components/NotFound/NotFound'
 import CategoriesList from './Modules/Categories/Components/CategoriesList/CategoriesList'
 import RecipiesList from './Modules/Recipies/Components/RecipiesList/RecipiesList'
 import { ToastContainer } from 'react-toastify'
+import { useState } from 'react'
+import {jwtDecode} from "jwt-decode"
+import Protectedroutes from "./Modules/Shared/Components/Protectedroutes/Protectedroutes"
 function App() {
+
+  const[loginData,setloginData]=useState(null);
+  const saveLoginData=()=>{
+    const enodeedToken=localStorage.getItem("token")
+    const decodedToken=jwtDecode(enodeedToken)
+    setloginData(decodedToken)
+  }
+
+
+
   const routes = createBrowserRouter([
     {
       path: "/",
       element: <AuthLayout />,
       errorElement: <NotFound />,
       children: [
-        { index: true, element: <Login /> },
+        { index: true, element: <Login saveLoginData={saveLoginData} /> },
         { path: "register", element: <Register /> },
-        { path: "login", element: <Login /> },
-        { path: "forgetpassword", element: <Forgetpassword /> },
-        { path: "reset", element: <Resetpass /> },
+        { path: "login", element: <Login saveLoginData={saveLoginData} /> },
+        { path: "forget-password", element: <Forgetpassword /> },
+        { path: "reset-password", element: <Resetpass /> },
       ],
     },
     {
       path: "dashboard",
-      element: <MasterLayout />,
+      element:
+      <Protectedroutes>
+        <MasterLayout loginDate={loginData} />
+      </Protectedroutes>,
       errorElement: <NotFound />,
       children: [
-        { index: true, element: <Home /> },
+        { index: true, element: <Home/> },
         { path: "RecipiesList", element: <RecipiesList /> },
         { path: "CategoriesList", element:<CategoriesList/> },
         { path: "UsersList", element: <UsersList /> },

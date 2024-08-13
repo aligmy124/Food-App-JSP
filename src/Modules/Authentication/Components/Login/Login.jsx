@@ -22,6 +22,7 @@ export default function Login({saveLoginData}) {
       try{
         let res=await axios.post(USERS_URL.login,data)
         const token=res.data.token
+        console.log(res.data.token);
         localStorage.setItem("token",token)
         saveLoginData();
         toast.success("Login Successfully")
@@ -40,7 +41,7 @@ export default function Login({saveLoginData}) {
   return (   
     <form onSubmit={handleSubmit(submit)}>
       <div className={styles["form-auth"]}>
-          <h3>Log in</h3>
+          <h3 className='login'>Log in</h3>
           <p>Welcome back! please enter your details</p>
         </div>
         <div className="mb-3">
@@ -79,7 +80,7 @@ export default function Login({saveLoginData}) {
         <Link to={"/forget-password"} className='text-success text-decoration-none'>ForgetPassword</Link>
       </div>
       <button type='submit' className="btn btn-success d-block w-100 my-3">Login</button>
-            </form>
+    </form>
 
 
   )

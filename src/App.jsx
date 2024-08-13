@@ -12,9 +12,10 @@ import NotFound from './Modules/Shared/Components/NotFound/NotFound'
 import CategoriesList from './Modules/Categories/Components/CategoriesList/CategoriesList'
 import RecipiesList from './Modules/Recipies/Components/RecipiesList/RecipiesList'
 import { ToastContainer } from 'react-toastify'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {jwtDecode} from "jwt-decode"
 import Protectedroutes from "./Modules/Shared/Components/Protectedroutes/Protectedroutes"
+import AddRecipy from './Modules/Recipies/Components/AddRecipy/AddRecipy'
 function App() {
 
   const[loginData,setloginData]=useState(null);
@@ -23,9 +24,11 @@ function App() {
     const decodedToken=jwtDecode(enodeedToken)
     setloginData(decodedToken)
   }
-
-
-
+  useEffect(()=>{
+    if(localStorage.getItem("token")){
+      saveLoginData()
+    }
+  },[])
   const routes = createBrowserRouter([
     {
       path: "/",
@@ -43,12 +46,13 @@ function App() {
       path: "dashboard",
       element:
       <Protectedroutes>
-        <MasterLayout loginDate={loginData} />
+        <MasterLayout loginData={loginData} />
       </Protectedroutes>,
       errorElement: <NotFound />,
       children: [
-        { index: true, element: <Home/> },
+        { index: true, element: <Home loginData={loginData}/> },
         { path: "RecipiesList", element: <RecipiesList /> },
+        { path: "AddRecipy", element: <AddRecipy /> },
         { path: "CategoriesList", element:<CategoriesList/> },
         { path: "UsersList", element: <UsersList /> },
       ],

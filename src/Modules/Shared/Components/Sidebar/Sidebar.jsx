@@ -7,7 +7,6 @@ export default function Sidebar() {
   const [isCollapse, setisCollapse] = useState(false);
   const [issize, setissize] = useState("915px");
   const nav=useNavigate()
-
   const collapse = () => {
     setisCollapse(!isCollapse);
   };
@@ -20,9 +19,9 @@ export default function Sidebar() {
   return (
     <>
       <div className="sidebarContainer">
-        <ProSidebar className='vh-100' collapsed={isCollapse}>
+        <ProSidebar  collapsed={isCollapse}>
           <button style={{border:"none",background:"none",margin:"auto"}}onClick={collapse}>
-            <img src={togger} alt="togger" style={{width:isCollapse? "80px":"150px"}}/>
+            <img src={togger} alt="togger" style={{width:isCollapse? "80px":"180px"}}/>
           </button>
           <Menu>
             <MenuItem icon={<i className="fa-solid fa-house"></i>} component={<Link to="/dashboard" />}>Home</MenuItem>

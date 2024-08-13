@@ -1,0 +1,28 @@
+.img-recipe{
+    width: 50px;
+}
+.custom-dropdown::after{
+    display: none;
+}
+.dropdown-toggle::after {
+    content: none !important;
+}
+.Dropdown_Toggle {
+    background-color: transparent !important;
+    border: none;
+    box-shadow: none;
+    color: inherit; /* للتأكد من أن لون النص موروث من العنصر الأب */
+  }
+  
+  .Dropdown_Toggle:hover,
+  .Dropdown_Toggle:focus {
+    background-color: transparent !important;
+    box-shadow: none;
+    border: none;
+  }
+  td, th {
+    width: 100px; /* أو أي عرض ثابت يناسب الجدول */
+  }
+  .dropdown-menu {
+    transition: none !important;
+}

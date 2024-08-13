@@ -19,6 +19,7 @@
 .sidebarContainer .ps-sidebar-container{
     background-color:rgba(31, 38, 62, 1);
     border-top-right-radius:58px ;
+    min-height: 130vh;
 }
 .sidebarContainer .ps-menu-button{
     color: #fff !important;
@@ -33,6 +34,9 @@
 .sidebarContainer .firstItem .ps-menu-button:hover{
     background:transparent !important;
 }
+
 .form-control{
     height: 56px;
 }
+/* table */
+

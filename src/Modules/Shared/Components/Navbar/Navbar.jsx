@@ -15,7 +15,7 @@ export default function Navbar({loginData}) {
     <ul className="navbar-nav m-auto">
       <li className="nav-item ms-1 active">
         <img src={username} alt="username" />
-        <h6 style={{display:"inline-block",margin:"0 8px",fontSize:"12px",fontWeight:"500",color:"rgba(31, 56, 76, 1)"}}>Upskilling {loginData?.userEmail}</h6>
+        <h6 style={{display:"inline-block",margin:"0 8px",fontSize:"12px",fontWeight:"500",color:"rgba(31, 56, 76, 1)"}}>{loginData?.userName}</h6>
       </li>
       <li className="nav-item mx-4">
       <a className="nav-link" href="#"><i className="fa-solid fa-angle-down"></i></a>

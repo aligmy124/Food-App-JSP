@@ -8,7 +8,9 @@ export const USERS_URL={
     forgetpass:`${BASE_USERS}/Reset/Request`,
     resetpass:`${BASE_USERS}/Reset`,
     getUsers:`${BASE_USERS}`,
+    verify:`${BASE_USERS}/verify`,
     delete:(id)=>`${BASE_USERS}/${id}`,
+    create:`${BASE_USERS}/Create`,
 }
 //category
 export const BASE_CATEGORY=`${BASE_URL}/Category`;
@@ -24,14 +26,23 @@ export const RECIPES_URL={
     getList:`${BASE_RECIPES}`,
     delete:(id)=>`${BASE_RECIPES}/${id}`,
     update:(id)=>`${BASE_RECIPES}/${id}`,
-    create:`${BASE_RECIPES}`
+    create:`${BASE_RECIPES}`,
+    view:(id)=>`${BASE_RECIPES}/${id}`
 }
 //Tag
 export const GETALLTAG=`${BASE_URL}/tag`
-// Users
-// export const BASE_USERS=`${BASE_URL}/Recipe`;
-// export const USERS_URL={
-//     getList:`${BASE_USERS}`,
-//     delete:(id)=>`${BASE_USERS}/${id}`,
-//     update:(id)=>`${BASE_USERS}/${id}`,
-// }
+
+//Favourite
+export const BASE_FAVOURITE=`${BASE_URL}/userRecipe`
+export const FAVOURITE_URL={
+    getList:`${BASE_FAVOURITE}`,
+    addFavourite:`${BASE_URL}/userRecipe`,
+    remove:(id)=>`${BASE_URL}/userRecipe/${id}`
+}
+
+/*Update GitHup:
+git status
+git add .
+git commit -m "
+git push origin main
+*/  

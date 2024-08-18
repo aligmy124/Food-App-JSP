@@ -3,7 +3,7 @@ import Header from '../../../Shared/Components/Header/Header'
 import users from "../../../../assets/img/users.png"
 import Dropdown from 'react-bootstrap/Dropdown';
 import axios from 'axios'
-import { BASE_CATEGORY, CATEGORY_URL } from '../../../../constant/Api'
+import { CATEGORY_URL } from '../../../../constant/Api'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import DeleteConfirmation from '../../../Shared/Components/DeleteConfirmation/DeleteConfirmation'
@@ -20,6 +20,12 @@ export default function CategoriesList({deleteItem}) {
     handleSubmit,
     formState:{errors},
     }=useForm()
+
+    //pagination
+    const [arrayofPages, setarrayofPages] = useState([])
+
+    //filter
+    const [search, setsearch] = useState("")
 
   //modules
   const [show, setShow] = useState(false);
@@ -46,33 +52,27 @@ export default function CategoriesList({deleteItem}) {
       toast.success("Delete Successfully")
       handleClose()
     } catch (error) {
-      toast.success("Delete not Successfully")
+      toast.error("Delete not Successfully")
+      handleClose()
+
     }
 
   }
 
-  //Update
-  const UpdateData=async(id)=>{
-    try {
-      let res=await axios.get(CATEGORY_URL.update,{headers:{
-        Authorization:`Bearer ${token}`
-      }})
-      console.log(res)
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
   const token=localStorage.getItem("token")
   const[categoryList,setcategoryList]=useState([])
 
   //GetCategoty
   
-  const getcategoryList= async ()=>{
+  const getcategoryList= async (pageNo,pageSize,nameInput)=>{
     try {
       let res=await axios.get(CATEGORY_URL.getList,{headers:{
         Authorization:`Bearer ${token}`
-      }})
+      },
+      params:{pageNumber:pageNo,pageSize:pageSize,name:nameInput}
+    })
+      setarrayofPages(Array(res.data.totalNumberOfPages).fill().map((_,i)=>i+1))
       setcategoryList(res.data.data)
       console.log(res.data.data)
     } catch (error) {
@@ -81,7 +81,7 @@ export default function CategoriesList({deleteItem}) {
   }
 
   useEffect(()=>{
-    getcategoryList()
+    getcategoryList(1,3,"")
   },[])
 
   // AddCategory
@@ -97,8 +97,18 @@ export default function CategoriesList({deleteItem}) {
     } catch (error) {
       console.log(error)
     }
-    
   }
+
+  // SearchElement
+
+
+  const Searchelement=(input)=>{
+    setsearch(input.target.value)
+    getcategoryList(1,3,input.target.value)
+  }
+
+
+
   return (
     <>
 <Header
@@ -161,50 +171,72 @@ export default function CategoriesList({deleteItem}) {
           </form>
 
         </Modal.Body>
-
       </Modal>
-
-
-
-
+      
 <div className="table-container p-3">
-  {categoryList.length<=0 ? <Nodate/> :
-  <table className="table">
-  <thead >
-    <tr>
-      <th scope="col">Id</th>
-      <th scope="col">Name</th>
-      <th scope="col">creationDate</th>
-      <th scope="col">modificationDate</th>
-      <th scope="col"></th>
-    </tr>
-  </thead>
-  <tbody>
-    {categoryList.map((CAT,index)=>(
-      <tr key={index}>
-      <th scope="col">{CAT.id}</th>
-      <th scope="col">{CAT.name}</th>
-      <th scope="col">{CAT.creationDate}</th>
-      <th scope="col">{CAT.modificationDate}</th>
-      <th scope="col">
-      <Dropdown>
-      <Dropdown.Toggle variant="light" className='Dropdown_Toggle'>
-      <i className="fa-solid fa-ellipsis"></i>
-      </Dropdown.Toggle>
-      <Dropdown.Menu className="dropdown-menu">
-        <Dropdown.Item href="#/action-1"><i style={{cursor:"pointer"}} className="fa-regular fa-eye text-success mx-3"></i>View</Dropdown.Item>
-        <Dropdown.Item href="#/action-2"><i style={{cursor:"pointer"}} className="fa-solid fa-pen-to-square text-success mx-3"></i>Edit</Dropdown.Item>
-        <Dropdown.Item onClick={()=>handleShow(CAT.id)}  href="#/action-3"><i style={{cursor:"pointer"}} className="fa-solid fa-trash text-success mx-3"></i>Delete</Dropdown.Item>
-      </Dropdown.Menu>
-    </Dropdown>
-      </th>
-    </tr>))}
+<div className="input-search my-2">
+  <input className="form-control mr-sm-2 " style={{height:"40px"}} type="search" placeholder="Search here" aria-label="Search" onChange={Searchelement} />
+  </div>
+   {categoryList.length<=0 ? <Nodate/> :
+    <table>
+    <thead >
+       <tr>
+         <th scope="col">Id</th>
+         <th scope="col">Name</th>
+         <th scope="col">creationDate</th>
+         <th scope="col">modificationDate</th>
+         <th scope="col">Action</th>
+       </tr>
+     </thead>
+     <tbody>
+       {categoryList.map((CAT,index)=>(
+         <tr key={index}>
+         <th scope="col">{CAT.id}</th>
+         <th scope="col">{CAT.name}</th>
+         <th scope="col">{CAT.creationDate}</th>
+         <th scope="col">{CAT.modificationDate}</th>
+         <th scope="col">
+         <Dropdown>
+         <Dropdown.Toggle variant="light" className='Dropdown_Toggle'>
+         <i className="fa-solid fa-ellipsis"></i>
+         </Dropdown.Toggle>
+         <Dropdown.Menu className="dropdown-menu">
+           <Dropdown.Item href="#/action-1"><i style={{cursor:"pointer"}} className="fa-regular fa-eye text-success mx-3"></i>View</Dropdown.Item>
+           {/* <Dropdown.Item href="#/action-2"><i style={{cursor:"pointer"}} className="fa-solid fa-pen-to-square text-success mx-3"></i>Edit</Dropdown.Item> */}
+           <Dropdown.Item onClick={()=>handleShow(CAT.id)}  href="#/action-3"><i style={{cursor:"pointer"}} className="fa-solid fa-trash text-success mx-3"></i>Delete</Dropdown.Item>
+         </Dropdown.Menu>
+       </Dropdown>
+         </th>
+       </tr>))}
+   
+     </tbody>
+     </table>
+   }
 
-  </tbody>
-</table>}
 
 </div>
 
+<div className="pagination-container">
+  <nav aria-label="Page navigation example">
+    <ul className="pagination">
+      <li className="page-item">
+        <a className="page-link" href="#" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      {arrayofPages.map((pageNo) => (
+        <li key={pageNo} className="page-item" onClick={() => getcategoryList(pageNo, 5)}>
+          <a className="page-link" href="#">{pageNo}</a>
+        </li>
+      ))}
+      <li className="page-item">
+        <a className="page-link" href="#" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
     </>
   )
 }

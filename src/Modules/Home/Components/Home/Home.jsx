@@ -1,7 +1,10 @@
 import Header from '../../../Shared/Components/Header/Header'
 import freepik from "../../../../assets/img/freepik.png"
 import { useNavigate } from 'react-router-dom'
-export default function Home({loginData}) {
+import { useContext } from 'react'
+import { AuthContext } from '../../../../Context/Authcontext'
+export default function Home() {
+  let {loginData}=useContext(AuthContext)
   const nav=useNavigate()
   return (
     <>
@@ -17,7 +20,7 @@ export default function Home({loginData}) {
         <p style={{maxWidth:"440px",color:"rgba(31, 38, 62, 1)",fontSize:"16px"}}>you can now fill the meals easily using the table and form , click here and sill it with the table !</p>
       </div>
       <div className="btn">
-        <button onClick={()=>nav("/dashboard/RecipiesList")} className='btn btn-success'>Fill Recipes <i className="fa-solid fa-arrow-right"></i></button>
+        <button onClick={()=>nav("/dashboard/AddRecipy")} className='btn btn-success'>Fill Recipes <i className="fa-solid fa-arrow-right"></i></button>
       </div>
     </div>
     </>

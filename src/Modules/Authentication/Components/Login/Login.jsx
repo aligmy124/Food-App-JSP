@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { useForm } from 'react-hook-form';
@@ -9,7 +9,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import styles from "../../auth.module.css";
 import { USERS_URL } from '../../../../constant/Api';
 import { email_valid, password_valid } from '../../../../constant/Validation';
-export default function Login({saveLoginData}) {
+import { AuthContext } from '../../../../Context/Authcontext';
+export default function Login() {
+  let {saveLoginData}=useContext(AuthContext)
   let navigate=useNavigate()
   let{
     register, 
@@ -41,7 +43,7 @@ export default function Login({saveLoginData}) {
   return (   
     <form onSubmit={handleSubmit(submit)}>
       <div className={styles["form-auth"]}>
-          <h3 className='login'>Log in</h3>
+          <h3>Log in</h3>
           <p>Welcome back! please enter your details</p>
         </div>
         <div className="mb-3">

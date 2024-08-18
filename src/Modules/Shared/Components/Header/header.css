@@ -1,6 +1,8 @@
-.headerContainer{
-    background-image: url(../../../../assets/img/Rectangle.png);
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: cover;
+.headerContainer {
+    background-image: 
+        url('./../../../../assets//bg-header/Header.svg'),
+        url(../../../../assets/img/Rectangle.png);
+    background-repeat: no-repeat, no-repeat;
+    background-position: center center, center center;
+    background-size: cover, cover;
 }

@@ -1,14 +1,21 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import InputGroup from 'react-bootstrap/InputGroup';
 import axios from 'axios';
-import { BASE_RECIPES, CATEGORY_URL, GETALLTAG, RECIPES_URL } from '../../../../constant/Api';
+import { CATEGORY_URL, GETALLTAG, RECIPES_URL } from '../../../../constant/Api';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import { json, useNavigate } from 'react-router-dom';
+import UsebeforunLoad from '../../../../Hooks/UsebeforunLoad';
 export default function AddRecipy() {
+  //nav
+  const nav=useNavigate()
     let{
         register, 
         handleSubmit,
+        getValues,
+        reset,
         formState:{errors},
         }=useForm()
     //token
@@ -45,10 +52,10 @@ export default function AddRecipy() {
 const appendFormdata = (data) => {
     const formData = new FormData();
     formData.append("name", data.name);
-    formData.append("tagId", data.tagId);  // إزالة المسافة الزائدة هنا
-    formData.append("price", data.price);  // إزالة المسافة الزائدة هنا
-    formData.append("recipeImage", data.recipeImage);
-    formData.append("description", data.description);  // إزالة المسافة الزائدة هنا
+    formData.append("tagId", data.tagId); 
+    formData.append("price", data.price);  
+    formData.append("recipeImage", data.recipeImage[0]);
+    formData.append("description", data.description);  
     formData.append("categoriesIds", data.categoriesIds);
     return formData;
   }
@@ -63,9 +70,11 @@ const appendFormdata = (data) => {
         }})
         console.log(res)
         console.log(data)
+        toast.success("Add successfully")
         
     } catch (error) {
         console.log(error)
+        toast.error("Add not successfully")
         
     }
   }
@@ -73,18 +82,32 @@ const appendFormdata = (data) => {
 
 
   useEffect(()=>{
-    getallTags()
-    getcategoryList()
+    const orderCategory=async()=>{
+      await getallTags()
+      await getcategoryList()
+      const storedData=JSON.parse(localStorage.getItem("recipy-data"))
+      await reset(storedData)
+    }
+    orderCategory()
     },[])
+
+    const beforeunLoad=useCallback(()=>{
+      localStorage.setItem("recipy-data",JSON.stringify(getValues()))
+    })
+    UsebeforunLoad(beforeunLoad)
+
+
+
+
   return (
     <>
     <div style={{backgroundColor:"rgba(240, 255, 239, 1)"}} className="title mx-2 my-2 px-5 d-flex justify-content-between align-items-center">
       <div className="title-info">
         <h2 style={{color:"rgba(31, 38, 62, 1)",fontSize:"24px",fontWeight:"600"}}>Fill the <span className='text-success'>Recipes</span> !</h2>
-        <p style={{maxWidth:"440px",color:"rgba(31, 38, 62, 1)",fontSize:"16px"}}>you can now fill the meals easily using the table and form , click here and sill it with the table !</p>
+        <p onClick={()=>nav()} style={{maxWidth:"440px",color:"rgba(31, 38, 62, 1)",fontSize:"16px"}}>you can now fill the meals easily using the table and form , click here and sill it with the table !</p>
       </div>
       <div className="btn">
-        <button onClick={()=>nav("/dashboard/RecipiesList")} className='btn btn-success'>Fill Recipes <i className="fa-solid fa-arrow-right"></i></button>
+        <button className='btn btn-success'>Fill Recipes <i className="fa-solid fa-arrow-right"></i></button>
       </div>
     </div>
     <form className='w-75 m-auto p-5'onSubmit={handleSubmit(createRecipy)}>
@@ -160,19 +183,6 @@ const appendFormdata = (data) => {
       </FloatingLabel>
       {errors.description&&<p className='text-danger'>{errors.description.message}</p>}
       </div>
-      {/* <div className="my-3">
-      <Form.Group controlId="formFile">
-        <Form.Label>Default file input example</Form.Label>
-        <Form.Control type="file" 
-        {...register("recipeImage",{
-            required:"recipeImage is required"
-        })}
-        />
-      </Form.Group>
-      
-      {errors.recipeImage&&<p className='text-danger'>{errors.recipeImage.message}</p>}
-      </div> */}
-      
       <Form.Group controlId="formFile" className="my-4" style={{ position: 'relative' }}>
         <Form.Label style={{
           display: 'block',
@@ -202,7 +212,10 @@ const appendFormdata = (data) => {
       </Form.Group>
 
     <div className="d-flex justify-content-end mt-4">
-      <button type="button" className="btn btn-outline-secondary me-3">Cancel</button>
+      <button onClick={()=>{
+        nav(-1);
+        localStorage.removeItem("recipy-data")
+      }} type="button" className="btn btn-outline-success me-3">Cancel</button>
       <button type="submit" className="btn btn-success">Save</button>
     </div>
     </form>

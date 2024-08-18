@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import "./nav.css"
 import username from '../../../../assets/img/Username.png'
-export default function Navbar({loginData}) {
+import { AuthContext } from '../../../../Context/Authcontext'
+export default function Navbar() {
+  let {loginData}=useContext(AuthContext)
   return (
   <nav className="navbar navbar-expand-lg navbar-light mt-4" style={{height:"68px"}}>
      <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

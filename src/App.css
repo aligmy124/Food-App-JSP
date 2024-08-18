@@ -24,9 +24,10 @@
 .sidebarContainer .ps-menu-button{
     color: #fff !important;
 }
-.sidebarContainer .ps-menu-button:hover {
-    /* background-color:rgba(47,140,96,0.5) !important; */
+.sidebarContainer .ps-menu-button:hover,.sidebarContainer .ps-menu-button:focus {
     background-color:rgba(0, 146, 71, 0.1) !important;
+    border-left:rgba(0, 146, 71, 1) 5px solid;
+
 }
 .sidebarContainer .bg-success{
     background-color: none;
@@ -38,5 +39,66 @@
 .form-control{
     height: 56px;
 }
-/* table */
 
+/* table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align:center;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 20px;
+}
+thead {
+    background-color:rgba(226, 229, 235, 1); /* لون الخلفية لرؤوس الجدول */
+    color: rgb(0, 0, 0); /* لون النص في رؤوس الجدول */
+}
+th {
+    text-align: left;
+}
+tr:nth-child(even) {
+    background-color: #f2f2f2; /* لون الخلفية للأسطر الزوجية */
+}
+tr:hover {
+    background-color:rgba(0, 146, 71, 1);
+    color: #fff; /* لون الخلفية عند التمرير فوق الصفوف */
+}
+.pagination-container{
+    float: right; /* اجعل الشريط يطفو إلى الجنب الأيمن */
+    margin: 1rem; /* أضف بعض الهوامش لتحسين الشكل */
+}
+  
+.pagination-container {
+    /* إذا كنت ترغب في إضافة بعض الحشو أو الهوامش */
+    margin: 20px 0;
+  }
+  
+  /* تنسيق جميع عناصر الترقيم */
+  .pagination .page-item {
+    /* إذا كنت ترغب في تغيير اللون الافتراضي */
+    color: #000;
+  }
+  
+  /* تنسيق روابط الترقيم */
+  .pagination .page-link {
+    color: #000; /* اللون الافتراضي للرابط */
+    text-decoration: none;
+  }
+  
+  /* تنسيق العنصر النشط أو الذي يتم النقر عليه */
+  .pagination .page-item.active .page-link {
+    color: #fff; /* لون النص عند التحديد */
+    background-color: #28a745; /* اللون الأخضر للخلفية */
+    border-color: #28a745; /* اللون الأخضر للحدود */
+  }
+  
+  /* تنسيق العنصر عند التمرير فوقه */
+  .pagination .page-item:hover .page-link  {
+    color: #fff; /* لون النص عند التمرير */
+    background-color: #28a745; /* اللون الأخضر للخلفية */
+    border-color: #28a745; /* اللون الأخضر للحدود */
+  }
+  
+
+  

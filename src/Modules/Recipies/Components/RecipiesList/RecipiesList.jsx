@@ -1,18 +1,21 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Dropdown from 'react-bootstrap/Dropdown';
-import Table from 'react-bootstrap/Table';
 import "./Recipes.css"
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Header from '../../../Shared/Components/Header/Header'
 import users from "../../../../assets/img/users.png"
 import axios from 'axios';
-import { BASE_IMG_URL, RECIPES_URL } from '../../../../constant/Api';
+import { BASE_IMG_URL, CATEGORY_URL, FAVOURITE_URL, GETALLTAG, RECIPES_URL } from '../../../../constant/Api';
 import DeleteConfirmation from '../../../Shared/Components/DeleteConfirmation/DeleteConfirmation';
 import {toast } from 'react-toastify';
 import Nodate from '../../../Shared/Nodate/Nodate';
 import { useNavigate } from 'react-router-dom';
+import Form from 'react-bootstrap/Form';
+import { AuthContext } from '../../../../Context/Authcontext';
 export default function Recipieslist() {
+  //usecontext
+  let{loginData}=useContext(AuthContext)
   //navagite
   const nav=useNavigate()
   //usestate recipe
@@ -21,6 +24,16 @@ export default function Recipieslist() {
   const [id, setid] = useState([])
   // //token
   const token=localStorage.getItem("token")
+  //tag
+  const [tag, settag] = useState([])
+  //pagination
+  const [arrayofpages, setarrayofpages] = useState([])
+  //searchname
+  const [searchname, setsearchname] = useState("")
+  //searchname
+  const [searchtagId, setsearchtagId] = useState("")
+  //searchname
+  const [searchCategory, setsearchCategory] = useState("")
   //modale
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -29,22 +42,61 @@ export default function Recipieslist() {
     setShow(true)
   };
 
+  //Tag
+  const getallTags=async()=>{
+    try {
+        let res=await axios.get(GETALLTAG,{headers:{
+            Authorization:`Bearer ${token}`
+        }})
+        settag(res.data)
+        console.log(res.data)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+//Category list
+  const[categoryList,setcategoryList]=useState([])
+  const getcategoryList= async ()=>{
+  try {
+    let res=await axios.get(CATEGORY_URL.getList,{headers:{
+      Authorization:`Bearer ${token}`
+    }})
+    setcategoryList(res.data.data)
+    console.log(res.data.data)
+  } catch (error) {
+    console.log(error)
+  }
+  }
+
   //Function 
-  const getRecipes=async()=>{
+  const getRecipes=async(pageNo,pagesize,nameInput,tagInput,categoryInput)=>{
     try {
       let res=await axios.get(RECIPES_URL.getList,{headers:{
         Authorization:`Bearer ${token}`
-      }})
+      },
+      params:{pageSize:pagesize,pageNumber:pageNo,name:nameInput,tagId:tagInput,categoryId:categoryInput}
+    })
+    setarrayofpages(Array(res.data.totalNumberOfPages).fill().map((_,i)=>i+1))
       setrecipy(res.data.data)
       console.log(res.data.data)
     } catch (error) {
       console.log(error)
     }
   }
-  // Useeffect
-  useEffect(()=>{
-    getRecipes()
-  },[])
+  // Favourite
+  const AddFavourite=async(id)=>{
+    try {
+      let res=await axios.post(FAVOURITE_URL.addFavourite,{"recipeId":id},{headers:{
+        Authorization:`Bearer ${token}`
+      }})
+      console.log(res)
+      
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
 
   //Delete function
   const DeleteItem=async()=>{
@@ -56,87 +108,177 @@ export default function Recipieslist() {
       toast.success("Delete Successfully")
       handleClose()
     } catch (error) {
-      toast.success("Delete not Successfully")
+      toast.error("Delete not Successfully")
+      handleClose()
+
     }
   }
+
+  const searchNameElement=(input)=>{
+    setsearchname(input.target.value)
+    getRecipes(1,5,input.target.value,searchtagId,searchCategory)
+  }
+  const searchTagElement=(input)=>{
+    setsearchtagId(input.target.value)
+    getRecipes(1,5,searchname,input.target.value,searchCategory)
+  }
+  const searchCategoryElement=(input)=>{
+    setsearchCategory(input.target.value)
+    getRecipes(1,5,searchname,searchtagId,input.target.value)
+  }
+
+
+    // Useeffect
+    useEffect(()=>{
+      getRecipes(1,5,"")
+      getallTags()
+      getcategoryList()
+    },[])
 
   
 
 
   return (
     <>
-    <Header
+  <Header
     title={"Recipes List"}
     description={"You can now add your items that any user can order it from the Application and you can edit"}
     imgUrl={users}
     type={"Users"}
-    name={"Recipes"}
-    add={"recipy"}
-    />
-    <div className="title d-flex justify-content-between px-3">
-          <div className="title-info">
-            <h2>Recipy Table Details</h2>
-            <p>You can check all details</p>
-          </div>
-          <div className="btn">
-            <button className='btn btn-success'onClick={()=>nav("/dashboard/AddRecipy")}>Add New Recipy</button>
-          </div>
+  />
+
+  <div className="title d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center px-3 my-3">
+    <div className="title-info mb-3 mb-md-0">
+      <h2 style={{ fontSize: '24px' }}>Recipy Table Details</h2>
+      <p style={{ fontSize: '14px', color: '#555' }}>You can check all details</p>
+    </div>
+    <div className="btn">
+      {loginData?.userGroup !== "SystemUser" && (
+        <button className='btn btn-success' onClick={() => nav("/dashboard/AddRecipy")}>Add New Recipy</button>
+      )}
+    </div>
+  </div>
+
+  <Modal show={show} onHide={handleClose}>
+    <Modal.Header closeButton></Modal.Header>
+    <Modal.Body>
+      <DeleteConfirmation deleteItem={"Recipes"} />
+    </Modal.Body>
+    <Modal.Footer>
+      <Button variant="border border-danger text-danger" onClick={DeleteItem}>
+        Delete item
+      </Button>
+    </Modal.Footer>
+  </Modal>
+
+  <div className="table-container p-3">
+    <div className="row mb-3">
+      <div className="col-12 col-md-4">
+        <input
+          className="form-control my-2"
+          style={{ height: "40px" }}
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+          onChange={searchNameElement}
+        />
+      </div>
+      <div className="col-12 col-md-4">
+        <div className="my-2">
+          <Form.Select aria-label="Default select example" onClick={searchTagElement}>
+            <option value="">Select Tag</option>
+            {tag.map((item, index) => (
+              <option key={index} value={item.id}>{item.name}</option>
+            ))}
+          </Form.Select>
         </div>
+      </div>
+      <div className="col-12 col-md-4">
+        <div className="my-2">
+          <Form.Select aria-label="Default select example" onClick={searchCategoryElement}>
+            <option value="">All categories</option>
+            {categoryList.map((item, index) => (
+              <option key={index} value={item.id}>{item.name}</option>
+            ))}
+          </Form.Select>
+        </div>
+      </div>
+    </div>
 
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-        </Modal.Header>
-        <Modal.Body>
-          <DeleteConfirmation deleteItem={"Recipes"}/>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button  variant="border border-danger text-danger" onClick={DeleteItem}>
-            Delete item
-          </Button>
-        </Modal.Footer>
-      </Modal>
+    {recipy.length <= 0 ? <Nodate /> : (
+      <div className="table-responsive">
+        <table className="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Image</th>
+              <th scope="col">Price</th>
+              <th scope="col">Description</th>
+              <th scope="col">Tag</th>
+              {loginData?.userGroup === "SuperAdmin" && <th scope="col">Action</th>}
+            </tr>
+          </thead>
+          <tbody>
+            {recipy.map((RCP, index) => (
+              <tr key={index}>
+                <td>{RCP.name}</td>
+                <td>
+                  {RCP.imagePath ? (
+                    <img className='img-recipe img-fluid' src={`${BASE_IMG_URL}/${RCP.imagePath}`} alt="Recipe" />
+                  ) : (
+                    <img className='img-recipe img-fluid' src="/path/to/default/image.png" alt="No Data" />
+                  )}
+                </td>
+                <td>{RCP.price}</td>
+                <td>{RCP.description}</td>
+                <td>{RCP.tag.name}</td>
+                {loginData?.userGroup === "SuperAdmin" && (
+                  <td>
+                    <Dropdown>
+                      <Dropdown.Toggle variant="light" className='Dropdown_Toggle'>
+                        <i className="fa-solid fa-ellipsis"></i>
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu className="dropdown-menu">
+                        <Dropdown.Item href="#/action-1">
+                          <i className="fa-regular fa-eye text-success mx-3"></i>View
+                        </Dropdown.Item>
+                        {loginData?.userGroup !== "SystemUser" && (
+                          <Dropdown.Item onClick={() => handleShow(RCP.id)} href="#/action-3">
+                            <i className="fa-solid fa-trash text-success mx-3"></i>Delete
+                          </Dropdown.Item>
+                        )}
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
 
-
-<div className="table-container p-3">
-  {recipy.length<=0 ? <Nodate/> :
-  <Table className="table" >
-  <thead>
-    <tr>
-      <th scope="col">Name</th>
-      <th scope="col">imagePath</th>
-      <th scope="col">Price</th>
-      <th scope="col">Description</th>
-      <th scope="col">Tag</th>
-      <th scope="col"></th>
-    </tr>
-  </thead>
-  <tbody>
-    {recipy.map((RCP,index)=>(
-      <tr key={index}>
-      <th scope="col">{RCP.name}</th>
-      <th scope="col">{RCP.imagePath?<img className='img-recipe' src={`${BASE_IMG_URL}/${RCP.imagePath}`} alt="img" />: <img className='img-recipe' src="/path/to/default/image.png" alt="No Data" />}</th>
-      <th scope="col">{RCP.price}</th>
-      <th scope="col">{RCP.description}</th>
-      <th scope="col">{RCP.tag.name}</th>
-
-      <th scope="col">
-      <Dropdown>
-      <Dropdown.Toggle variant="light" className='Dropdown_Toggle'>
-      <i className="fa-solid fa-ellipsis"></i>
-      </Dropdown.Toggle>
-      <Dropdown.Menu className="dropdown-menu">
-        <Dropdown.Item href="#/action-1"><i style={{cursor:"pointer"}} className="fa-regular fa-eye text-success mx-3"></i>View</Dropdown.Item>
-        <Dropdown.Item href="#/action-2"><i style={{cursor:"pointer"}} className="fa-solid fa-pen-to-square text-success mx-3"></i>Edit</Dropdown.Item>
-        <Dropdown.Item onClick={()=>handleShow(RCP.id)}  href="#/action-3"><i style={{cursor:"pointer"}} className="fa-solid fa-trash text-success mx-3"></i>Delete</Dropdown.Item>
-      </Dropdown.Menu>
-    </Dropdown>
-      </th>
-    </tr>))}
-  </tbody>
-</Table>}
-
-
-</div>
+    <div className="pagination-container mt-3">
+      <ul className="pagination">
+        <li className="page-item">
+          <a className="page-link" href="#" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        {arrayofpages.map((pageNo) => (
+          <li key={pageNo} className="page-item" onClick={() => getRecipes(pageNo, 3)}>
+            <a className="page-link" href="#">{pageNo}</a>
+          </li>
+        ))}
+        <li className="page-item">
+          <a className="page-link" href="#" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </>
+
   )
 }

@@ -12,32 +12,24 @@ import NotFound from './Modules/Shared/Components/NotFound/NotFound'
 import CategoriesList from './Modules/Categories/Components/CategoriesList/CategoriesList'
 import RecipiesList from './Modules/Recipies/Components/RecipiesList/RecipiesList'
 import { ToastContainer } from 'react-toastify'
-import { useEffect, useState } from 'react'
-import {jwtDecode} from "jwt-decode"
 import Protectedroutes from "./Modules/Shared/Components/Protectedroutes/Protectedroutes"
 import AddRecipy from './Modules/Recipies/Components/AddRecipy/AddRecipy'
+import Verfiy_register from './Modules/Authentication/Components/VerfiyCode/Verfiy_register'
+import AddUsers from './Modules/Users/Components/AddUsers/AddUsers'
+import Favourite from './Modules/Recipies/Components/Favourite/Favourite'
 function App() {
 
-  const[loginData,setloginData]=useState(null);
-  const saveLoginData=()=>{
-    const enodeedToken=localStorage.getItem("token")
-    const decodedToken=jwtDecode(enodeedToken)
-    setloginData(decodedToken)
-  }
-  useEffect(()=>{
-    if(localStorage.getItem("token")){
-      saveLoginData()
-    }
-  },[])
+  
   const routes = createBrowserRouter([
     {
       path: "/",
       element: <AuthLayout />,
       errorElement: <NotFound />,
       children: [
-        { index: true, element: <Login saveLoginData={saveLoginData} /> },
+        { index: true, element: <Login  /> },
         { path: "register", element: <Register /> },
-        { path: "login", element: <Login saveLoginData={saveLoginData} /> },
+        { path: "Verfiy_register", element: <Verfiy_register /> },
+        { path: "login", element: <Login /> },
         { path: "forget-password", element: <Forgetpassword /> },
         { path: "reset-password", element: <Resetpass /> },
       ],
@@ -46,15 +38,17 @@ function App() {
       path: "dashboard",
       element:
       <Protectedroutes>
-        <MasterLayout loginData={loginData} />
+        <MasterLayout/>
       </Protectedroutes>,
       errorElement: <NotFound />,
       children: [
-        { index: true, element: <Home loginData={loginData}/> },
+        { index: true, element: <Home/> },
         { path: "RecipiesList", element: <RecipiesList /> },
         { path: "AddRecipy", element: <AddRecipy /> },
         { path: "CategoriesList", element:<CategoriesList/> },
         { path: "UsersList", element: <UsersList /> },
+        { path: "Add_User", element: <AddUsers /> },
+        { path: "Favourite", element: <Favourite/> },
       ],
     },
   ])

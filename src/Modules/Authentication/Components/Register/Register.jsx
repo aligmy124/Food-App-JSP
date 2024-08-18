@@ -6,18 +6,19 @@ import { useForm } from 'react-hook-form';
 import { USERS_URL } from '../../../../constant/Api';
 import { email_valid, password_valid } from '../../../../constant/Validation';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export default function Register() {
 
 /*
 Username: GML123
-email:ag0355121
+email:tshirtleonardo2023@gmail.com
 password:Ax50@tvn7
 code:e4ad
 */ 
 
 
-  // const nav=useNavigate()
+  const nav=useNavigate()
   const {
     register,
     handleSubmit,
@@ -29,8 +30,11 @@ code:e4ad
     try {
       let res = await axios.post(USERS_URL.register, data);
       console.log(res);
+      nav("/Verfiy_register")
+      toast.success(Response.data.message)
     } catch (error) {
       console.log(error);
+      // toast.error(error.Response.data.message)
     }
   };
 

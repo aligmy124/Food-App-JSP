@@ -13,3 +13,4 @@ Currently, two official plugins are available:
 # -FoodApp
 # Restaurante-App
 # Joe
+# Restaurant

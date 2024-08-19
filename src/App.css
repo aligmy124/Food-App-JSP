@@ -64,6 +64,7 @@ tr:hover {
     background-color:rgba(0, 146, 71, 1);
     color: #fff; /* لون الخلفية عند التمرير فوق الصفوف */
 }
+/* pagination */
 .pagination-container{
     float: right; /* اجعل الشريط يطفو إلى الجنب الأيمن */
     margin: 1rem; /* أضف بعض الهوامش لتحسين الشكل */
@@ -99,6 +100,6 @@ tr:hover {
     background-color: #28a745; /* اللون الأخضر للخلفية */
     border-color: #28a745; /* اللون الأخضر للحدود */
   }
-  
+  /* sidebar */
 
   

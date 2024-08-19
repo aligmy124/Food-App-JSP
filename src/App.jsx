@@ -45,6 +45,7 @@ function App() {
         { index: true, element: <Home/> },
         { path: "RecipiesList", element: <RecipiesList /> },
         { path: "AddRecipy", element: <AddRecipy /> },
+        // { path: "Recipy_edit/:id", element: <AddRecipy/> },
         { path: "CategoriesList", element:<CategoriesList/> },
         { path: "UsersList", element: <UsersList /> },
         { path: "Add_User", element: <AddUsers /> },

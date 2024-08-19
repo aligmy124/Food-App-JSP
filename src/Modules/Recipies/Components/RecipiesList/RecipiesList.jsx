@@ -41,7 +41,6 @@ export default function Recipieslist() {
     setid(id)
     setShow(true)
   };
-
   //Tag
   const getallTags=async()=>{
     try {
@@ -114,6 +113,21 @@ export default function Recipieslist() {
     }
   }
 
+  const UpdateItem=async()=>{
+    try {
+      let res=await axios.put(RECIPES_URL.update(id),{headers:{
+        Authorization:`Bearer ${token}`
+      }})
+      getRecipes()
+      toast.success("Delete Successfully")
+      handleClose()
+    } catch (error) {
+      toast.error("Delete not Successfully")
+      handleClose()
+
+    }
+  }
+
   const searchNameElement=(input)=>{
     setsearchname(input.target.value)
     getRecipes(1,5,input.target.value,searchtagId,searchCategory)
@@ -139,22 +153,166 @@ export default function Recipieslist() {
 
 
   return (
-    <>
+//     <>
+//   <Header
+//     title={"Recipes List"}
+//     description={"You can now add your items that any user can order it from the Application and you can edit"}
+//     imgUrl={users}
+//     type={"Users"}
+//   />
+
+//   <div className="title d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center px-3 my-3">
+//     <div className="title-info mb-3 mb-md-0">
+//       <h2 style={{ fontSize: '24px' }}>Recipy Table Details</h2>
+//       <p style={{ fontSize: '14px', color: '#555' }}>You can check all details</p>
+//     </div>
+//     <div className="btn">
+//       {loginData?.userGroup !== "SystemUser" && (
+//         <button className='btn btn-success' onClick={() => nav("/dashboard/AddRecipy")}>Add New Recipy</button>
+//       )}
+//     </div>
+//   </div>
+
+//   <Modal show={show} onHide={handleClose}>
+//     <Modal.Header closeButton></Modal.Header>
+//     <Modal.Body>
+//       <DeleteConfirmation deleteItem={"Recipes"} />
+//     </Modal.Body>
+//     <Modal.Footer>
+//       <Button variant="border border-danger text-danger" onClick={DeleteItem}>
+//         Delete item
+//       </Button>
+//     </Modal.Footer>
+//   </Modal>
+
+//   <div className="table-container p-3">
+//     <div className="row mb-3">
+//       <div className="col-12 col-md-4">
+//         <input
+//           className="form-control my-2"
+//           style={{ height: "40px" }}
+//           type="search"
+//           placeholder="Search"
+//           aria-label="Search"
+//           onChange={searchNameElement}
+//         />
+//       </div>
+//       <div className="col-12 col-md-4">
+//         <div className="my-2">
+//           <Form.Select aria-label="Default select example" onClick={searchTagElement}>
+//             <option value="">Select Tag</option>
+//             {tag.map((item, index) => (
+//               <option key={index} value={item.id}>{item.name}</option>
+//             ))}
+//           </Form.Select>
+//         </div>
+//       </div>
+//       <div className="col-12 col-md-4">
+//         <div className="my-2">
+//           <Form.Select aria-label="Default select example" onClick={searchCategoryElement}>
+//             <option value="">All categories</option>
+//             {categoryList.map((item, index) => (
+//               <option key={index} value={item.id}>{item.name}</option>
+//             ))}
+//           </Form.Select>
+//         </div>
+//       </div>
+//     </div>
+
+//     {recipy.length <= 0 ? <Nodate /> : (
+//       <div className="table-responsive">
+//         <table className="table table-bordered">
+//           <thead>
+//             <tr>
+//               <th scope="col">Name</th>
+//               <th scope="col">Image</th>
+//               <th scope="col">Price</th>
+//               <th scope="col">Description</th>
+//               <th scope="col">Tag</th>
+//               {loginData?.userGroup === "SuperAdmin" && <th scope="col">Action</th>}
+//             </tr>
+//           </thead>
+//           <tbody>
+//             {recipy.map((RCP, index) => (
+//               <tr key={index}>
+//                 <td>{RCP.name}</td>
+//                 <td>
+//                   {RCP.imagePath ? (
+//                     <img className='img-recipe img-fluid' src={`${BASE_IMG_URL}/${RCP.imagePath}`} alt="Recipe" />
+//                   ) : (
+//                     <img className='img-recipe img-fluid' src="/path/to/default/image.png" alt="No Data" />
+//                   )}
+//                 </td>
+//                 <td>{RCP.price}</td>
+//                 <td>{RCP.description}</td>
+//                 <td>{RCP.tag.name}</td>
+//                 {loginData?.userGroup === "SuperAdmin" && (
+//                   <td>
+//                     <Dropdown>
+//                       <Dropdown.Toggle variant="light" className='Dropdown_Toggle'>
+//                         <i className="fa-solid fa-ellipsis"></i>
+//                       </Dropdown.Toggle>
+//                       <Dropdown.Menu className="dropdown-menu">
+//                         <Dropdown.Item href="#/action-1">
+//                           <i className="fa-regular fa-eye text-success mx-3"></i>View
+//                         </Dropdown.Item>
+//                         <Dropdown.Item href="#/action-1">
+//                           <i className="fa-regular fa-eye text-success mx-3"></i>Update
+//                         </Dropdown.Item>
+//                         {loginData?.userGroup !== "SystemUser" && (
+//                           <Dropdown.Item onClick={() => handleShow(RCP.id)} href="#/action-3">
+//                             <i className="fa-solid fa-trash text-success mx-3"></i>Delete
+//                           </Dropdown.Item>
+//                         )}
+//                       </Dropdown.Menu>
+//                     </Dropdown>
+//                   </td>
+//                 )}
+//               </tr>
+//             ))}
+//           </tbody>
+//         </table>
+//       </div>
+//     )}
+
+//     <div className="pagination-container mt-3">
+//       <ul className="pagination">
+//         <li className="page-item">
+//           <a className="page-link" href="#" aria-label="Previous">
+//             <span aria-hidden="true">&laquo;</span>
+//           </a>
+//         </li>
+//         {arrayofpages.map((pageNo) => (
+//           <li key={pageNo} className="page-item" onClick={() => getRecipes(pageNo, 3)}>
+//             <a className="page-link" href="#">{pageNo}</a>
+//           </li>
+//         ))}
+//         <li className="page-item">
+//           <a className="page-link" href="#" aria-label="Next">
+//             <span aria-hidden="true">&raquo;</span>
+//           </a>
+//         </li>
+//       </ul>
+//     </div>
+//   </div>
+// </>
+
+<>
   <Header
     title={"Recipes List"}
-    description={"You can now add your items that any user can order it from the Application and you can edit"}
+    description={"You can now add your items that any user can order from the Application and you can edit them."}
     imgUrl={users}
     type={"Users"}
   />
 
   <div className="title d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center px-3 my-3">
     <div className="title-info mb-3 mb-md-0">
-      <h2 style={{ fontSize: '24px' }}>Recipy Table Details</h2>
-      <p style={{ fontSize: '14px', color: '#555' }}>You can check all details</p>
+      <h2 className="fs-4">Recipe Table Details</h2>
+      <p className="fs-6 text-muted">You can check all details</p>
     </div>
     <div className="btn">
       {loginData?.userGroup !== "SystemUser" && (
-        <button className='btn btn-success' onClick={() => nav("/dashboard/AddRecipy")}>Add New Recipy</button>
+        <button className='btn btn-success' onClick={() => nav("/dashboard/AddRecipy")}>Add New Recipe</button>
       )}
     </div>
   </div>
@@ -172,38 +330,34 @@ export default function Recipieslist() {
   </Modal>
 
   <div className="table-container p-3">
-    <div className="row mb-3">
-      <div className="col-12 col-md-4">
-        <input
-          className="form-control my-2"
-          style={{ height: "40px" }}
-          type="search"
-          placeholder="Search"
-          aria-label="Search"
-          onChange={searchNameElement}
-        />
-      </div>
-      <div className="col-12 col-md-4">
-        <div className="my-2">
-          <Form.Select aria-label="Default select example" onClick={searchTagElement}>
-            <option value="">Select Tag</option>
-            {tag.map((item, index) => (
-              <option key={index} value={item.id}>{item.name}</option>
-            ))}
-          </Form.Select>
-        </div>
-      </div>
-      <div className="col-12 col-md-4">
-        <div className="my-2">
-          <Form.Select aria-label="Default select example" onClick={searchCategoryElement}>
-            <option value="">All categories</option>
-            {categoryList.map((item, index) => (
-              <option key={index} value={item.id}>{item.name}</option>
-            ))}
-          </Form.Select>
-        </div>
-      </div>
+  <div className="row mb-3 justify-content-center">
+    <div className="col-12 col-md-4 mb-2">
+      <input
+        className="form-control"
+        style={{ height: "40px" }}
+        type="search"
+        placeholder="Search"
+        aria-label="Search"
+        onChange={searchNameElement}
+      />
     </div>
+    <div className="col-12 col-md-4 mb-2">
+      <Form.Select aria-label="Select Tag" onClick={searchTagElement}>
+        <option value="">Select Tag</option>
+        {tag.map((item, index) => (
+          <option key={index} value={item.id}>{item.name}</option>
+        ))}
+      </Form.Select>
+    </div>
+    <div className="col-12 col-md-4 mb-2">
+      <Form.Select aria-label="Select Category" onClick={searchCategoryElement}>
+        <option value="">All categories</option>
+        {categoryList.map((item, index) => (
+          <option key={index} value={item.id}>{item.name}</option>
+        ))}
+      </Form.Select>
+    </div>
+  </div>
 
     {recipy.length <= 0 ? <Nodate /> : (
       <div className="table-responsive">
@@ -240,11 +394,14 @@ export default function Recipieslist() {
                       </Dropdown.Toggle>
                       <Dropdown.Menu className="dropdown-menu">
                         <Dropdown.Item href="#/action-1">
-                          <i className="fa-regular fa-eye text-success mx-3"></i>View
+                          <i className="fa-regular fa-eye text-success mx-2"></i>View
+                        </Dropdown.Item>
+                        <Dropdown.Item href="#/action-2">
+                          <i className="fa-regular fa-edit text-warning mx-2"></i>Update
                         </Dropdown.Item>
                         {loginData?.userGroup !== "SystemUser" && (
                           <Dropdown.Item onClick={() => handleShow(RCP.id)} href="#/action-3">
-                            <i className="fa-solid fa-trash text-success mx-3"></i>Delete
+                            <i className="fa-solid fa-trash text-danger mx-2"></i>Delete
                           </Dropdown.Item>
                         )}
                       </Dropdown.Menu>
@@ -279,6 +436,7 @@ export default function Recipieslist() {
     </div>
   </div>
 </>
+
 
   )
 }

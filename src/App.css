@@ -102,4 +102,109 @@ tr:hover {
   }
   /* sidebar */
 
+  /* nav.css */
+.navbar {
+    background-color: #f8f9fa; /* لون الخلفية */
+  }
   
+  .navbar-toggler {
+    border: none;
+    background-color: transparent;
+    outline: none;
+  }
+  
+  .navbar-toggler-icon {
+    background-image: url('path/to/custom-toggler-icon.png'); /* مسار أيقونة مخصصة */
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+  
+  .navbar-collapse {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .branding img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .nav-item img {
+    width: 40px; /* حجم صورة المستخدم */
+    height: 40px;
+    border-radius: 50%;
+  }
+  
+  .nav-item h6 {
+    display: inline-block;
+    margin: 0 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(31, 56, 76, 1);
+  }
+  
+  @media (max-width: 768px) {
+    .navbar-toggler-icon {
+      background-image: url('path/to/another-icon.png'); /* تغيير الأيقونة في الشاشات الصغيرة */
+    }
+  
+    .branding img {
+      width: 150px; /* تقليل حجم الشعار في الشاشات الصغيرة */
+    }
+  }
+  /* sidbar */
+  /* ملف CSS الخاص بـ Sidebar */
+
+/* تنسيق لتجنب تداخل العناصر */
+/* تثبيت الـ Sidebar */
+.sidebar-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 250px; /* العرض الافتراضي للـ Sidebar */
+  z-index: 1000;
+  background-color: #f8f9fa;
+  transition: width 0.3s ease; /* لإضافة تأثير انسيابي عند التصغير */
+}
+
+/* ضبط مساحة المحتوى */
+.content-container {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  transition: margin-left 0.3s ease; /* لتحسين الانتقال */
+}
+
+/* تثبيت الـ Navbar */
+.navbar-fixed {
+  position: fixed;
+  top: 0;
+  left: 250px; /* يجب أن يتطابق مع عرض الـ Sidebar */
+  width: calc(100% - 250px);
+  z-index: 1001;
+  background-color: white;
+  transition: left 0.3s ease, width 0.3s ease;
+}
+
+/* إضافة المساحة العلوية */
+.content {
+  padding-top: 68px;
+}
+
+/* تصغير العرض عند الشاشات الصغيرة */
+@media (max-width: 768px) {
+  .sidebar-fixed {
+    width: 80px; /* عرض أصغر للـ Sidebar */
+  }
+
+  .content-container {
+    margin-left: 80px; /* تعديل الهامش ليتطابق مع عرض الـ Sidebar */
+    width: calc(100% - 80px);
+  }
+
+  .navbar-fixed {
+    left: 80px; /* تعديل موقع الـ Navbar ليتطابق مع عرض الـ Sidebar */
+    width: calc(100% - 80px);
+  }
+}

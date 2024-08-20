@@ -19,10 +19,16 @@ export default function AddRecipy() {
         formState:{errors},
         }=useForm()
     //Location
-    let location=useLocation()
-    let status=location.state?.type=="edit"
-    let recipyData=location.state?.
+    const location=useLocation()
+    const status=location.state?.type==="edit"
+    const recipeData=location.state?.AddRecipy
     console.log(location)
+
+    //Update
+
+    const [Tagid, setTagid] = useState("")
+    const [categoryId, setcategoryId] = useState("")
+
     //token
     const token=localStorage.getItem("token")
     //usestate
@@ -69,10 +75,14 @@ const appendFormdata = (data) => {
   const createRecipy=async(data)=>{
     let recipyData=appendFormdata(data)
     try {
-        let res=await axios.post(RECIPES_URL.create, recipyData,
-        {headers:{
-            Authorization:`Bearer ${token}`
-        }})
+        let res=await axios(
+          {
+            method:status?"put":"post",
+            url:status?RECIPES_URL.update(recipeData.id):RECIPES_URL.create,data:recipyData,headers:{
+              Authorization:`Bearer ${token}`
+            }
+          }
+        )
         console.log(res)
         console.log(data)
         toast.success("Add successfully")
@@ -83,10 +93,6 @@ const appendFormdata = (data) => {
         
     }
   }
-
-
-
-
   useEffect(()=>{
     const orderCategory=async()=>{
       await getallTags()
@@ -95,6 +101,11 @@ const appendFormdata = (data) => {
       await reset(storedData)
     }
     orderCategory()
+
+    if(status&&recipeData){
+      setTagid(recipeData.tag.id)
+      setcategoryId(recipeData.category[0].id)
+    }
     },[])
 
     const beforeunLoad=useCallback(()=>{
@@ -106,126 +117,6 @@ const appendFormdata = (data) => {
 
 
   return (
-//     <>
-//     <div style={{backgroundColor:"rgba(240, 255, 239, 1)"}} className="title mx-2 my-2 px-5 d-flex justify-content-between align-items-center">
-//       <div className="title-info">
-//         <h2 style={{color:"rgba(31, 38, 62, 1)",fontSize:"24px",fontWeight:"600"}}>Fill the <span className='text-success'>Recipes</span> !</h2>
-//         <p onClick={()=>nav()} style={{maxWidth:"440px",color:"rgba(31, 38, 62, 1)",fontSize:"16px"}}>you can now fill the meals easily using the table and form , click here and sill it with the table !</p>
-//       </div>
-//       <div className="btn">
-//         <button className='btn btn-success'>Fill Recipes <i className="fa-solid fa-arrow-right"></i></button>
-//       </div>
-//     </div>
-//     <form className='w-75 m-auto p-5'onSubmit={handleSubmit(createRecipy)}>
-//     <div className="my-2 ">
-//         <InputGroup>
-//         <Form.Control
-//           style={{backgroundColor:"rgba(217, 217, 217, 1)",height:"48px"}}
-//           type='text'
-//           placeholder="Recipy Name"
-//           aria-label="name"
-//           aria-describedby="basic-addon1"
-//           {...register("name",{
-//             required:"name is required"
-//           })}
-//         />
-//       </InputGroup>
-//       {errors.name&&<p className='text-danger'>{errors.name.message}</p>}
-//     </div>
-
-//     <div className="my-2">
-//   <Form.Select 
-//     aria-label="Default select example"
-//     style={{backgroundColor:"rgba(217, 217, 217, 1)"}}
-//     {...register("tagId", {
-//       required: "tag is required"
-//     })}
-//   >
-//     <option value="">Select Tag</option>
-//     {tag.map((item, index) => (
-//       <option key={index} value={item.id}>{item.name}</option>
-//     ))}
-//   </Form.Select>
-//   {errors.tagId && <p className='text-danger'>{errors.tagId.message}</p>}
-// </div>
-
-
-// <div className="my-2">
-//         <InputGroup>
-//         <Form.Control
-//           style={{backgroundColor:"rgba(217, 217, 217, 1)",height:"48px"}}
-//           type='text'
-//           placeholder="Price"
-//           aria-label="price"
-//           aria-describedby="basic-addon3"
-//           {...register("price",{
-//             required:"price is required"
-//           })}
-//         />
-//       </InputGroup>
-//       {errors.price&&<p className='text-danger'>{errors.price.message}</p>}
-//     </div>
-
-//     <div className="my-2">
-//     <Form.Select
-//         {...register("categoriesIds",{
-//             required:"categoriesIds is required"
-//         })}
-//        aria-label="Default select example"style={{backgroundColor:"rgba(217, 217, 217, 1)"}}>
-//       {categoryList.map((item,index)=><option key={index} value={item.id}>{item.name}</option>)}
-//     </Form.Select>
-//     {errors.categoriesIds&&<p className='text-danger'>{errors.categoriesIds.message}</p>}
-//     </div>
-//     <div className="my-2">
-//       <FloatingLabel controlId="floatingTextarea2" label="Description">
-//         <Form.Control
-//           as="textarea"
-//           placeholder="Leave a comment here"
-//           style={{ height: '100px' , backgroundColor:"rgba(217, 217, 217, 1)"}}
-//           {...register("description",{
-//             required:"description is required"
-//           })}
-//         />
-//       </FloatingLabel>
-//       {errors.description&&<p className='text-danger'>{errors.description.message}</p>}
-//       </div>
-//       <Form.Group controlId="formFile" className="my-4" style={{ position: 'relative' }}>
-//         <Form.Label style={{
-//           display: 'block',
-//           padding: '10px',
-//           border: '2px dashed rgba(0, 128, 0, 0.5)',
-//           backgroundColor: 'rgba(217, 217, 217, 1)',
-//           borderRadius: '5px',
-//           textAlign: 'center',
-//           cursor: 'pointer',
-//           color: '#28a745',
-//           fontSize: '18px'
-//         }}>
-//           Drag & Drop or <span style={{ textDecoration: 'underline' }}>Choose a Item Image to Upload</span>
-//           <Form.Control type="file" {...register("recipeImage", {
-//             required: "Image is required"
-//           })} style={{
-//             opacity: 0,
-//             position: 'absolute',
-//             top: 0,
-//             left: 0,
-//             width: '100%',
-//             height: '100%',
-//             cursor: 'pointer'
-//           }} />
-//         </Form.Label>
-//         {errors.recipeImage && <p className='text-danger'>{errors.recipeImage.message}</p>}
-//       </Form.Group>
-
-//     <div className="d-flex justify-content-end mt-4">
-//       <button onClick={()=>{
-//         nav(-1);
-//         localStorage.removeItem("recipy-data")
-//       }} type="button" className="btn btn-outline-success me-3">Cancel</button>
-//       <button type="submit" className="btn btn-success">Save</button>
-//     </div>
-//     </form>
-//     </>
 <>
   <div style={{backgroundColor:"rgba(240, 255, 239, 1)"}} className="title mx-2 my-2 px-3 px-md-5 d-flex flex-column flex-md-row justify-content-between align-items-center">
     <div className="title-info">
@@ -249,6 +140,7 @@ const appendFormdata = (data) => {
           {...register("name", {
             required: "Name is required"
           })}
+          defaultValue={status?recipeData.name:""}
         />
       </InputGroup>
       {errors.name && <p className='text-danger'>{errors.name.message}</p>}
@@ -261,6 +153,8 @@ const appendFormdata = (data) => {
         {...register("tagId", {
           required: "Tag is required"
         })}
+        value={Tagid}
+        onChange={(e)=>setTagid(e.target.value)}
       >
         <option value="">Select Tag</option>
         {tag.map((item, index) => (
@@ -281,6 +175,7 @@ const appendFormdata = (data) => {
           {...register("price", {
             required: "Price is required"
           })}
+          defaultValue={status?recipeData.price:""}
         />
       </InputGroup>
       {errors.price && <p className='text-danger'>{errors.price.message}</p>}
@@ -291,6 +186,9 @@ const appendFormdata = (data) => {
         {...register("categoriesIds", {
           required: "Categories are required"
         })}
+        value={categoryId}
+        onChange={(e)=>setcategoryId(e.target.value)}
+
         aria-label="Default select example"
         style={{backgroundColor:"rgba(217, 217, 217, 1)"}}
       >
@@ -310,6 +208,7 @@ const appendFormdata = (data) => {
           {...register("description", {
             required: "Description is required"
           })}
+          defaultValue={status?recipeData.description:""}
         />
       </FloatingLabel>
       {errors.description && <p className='text-danger'>{errors.description.message}</p>}

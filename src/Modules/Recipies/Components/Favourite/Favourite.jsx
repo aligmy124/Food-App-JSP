@@ -7,14 +7,17 @@ import Nodate from '../../../Shared/Nodate/Nodate'
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { toast } from 'react-toastify'
+import Loading from '../../../../Loading/Loading';
 export default function Favourite() {
 
   const [favouriteList, setfavouriteList] = useState([])
-  const [removefavourit, setremovefavourit] = useState([])
+  //loding
+  const [loading, setLoading] = useState(false);
   //token
   const token=localStorage.getItem("token")
   //getList
   const getFavouriteList=async()=>{
+    setLoading(true)
     try {
         let res=await axios.get(FAVOURITE_URL.getList,{headers:{
             Authorization:`Bearer ${token}`
@@ -24,6 +27,9 @@ export default function Favourite() {
         
     } catch (error) {
         console.log(error)
+    }
+    finally{
+      setLoading(false)
     }
   }
 
@@ -58,6 +64,8 @@ export default function Favourite() {
       imgUrl={users}
       type={"Users"}
     />
+
+    {loading&&<Loading/>}
   
     {favouriteList.length <= 0 ? (
       <Nodate />

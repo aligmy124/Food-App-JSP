@@ -12,8 +12,10 @@ import Nodate from '../../../Shared/Nodate/Nodate'
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { useForm } from 'react-hook-form';
+import Loading from '../../../../Loading/Loading';
 export default function CategoriesList({deleteItem}) {
-
+  //loading
+  const [loading, setLoading] = useState(false);
   //Register
   let{
     register, 
@@ -96,6 +98,7 @@ export default function CategoriesList({deleteItem}) {
   //GetCategoty
   
   const getcategoryList= async (pageNo,pageSize,nameInput)=>{
+    setLoading(true)
     try {
       let res=await axios.get(CATEGORY_URL.getList,{headers:{
         Authorization:`Bearer ${token}`
@@ -108,6 +111,9 @@ export default function CategoriesList({deleteItem}) {
     } catch (error) {
       console.log(error)
     }
+    finally{
+      setLoading(false)
+    }
   }
 
   useEffect(()=>{
@@ -115,8 +121,8 @@ export default function CategoriesList({deleteItem}) {
   },[])
 
   // AddCategory
-  const Addcategory=async(data)=>
-  {
+  const Addcategory=async(data)=>  {
+    setLoading(false)
     try {
       let res=await axios.post(CATEGORY_URL.create,data,{headers:{
         Authorization:`Bearer ${token}`
@@ -136,166 +142,12 @@ export default function CategoriesList({deleteItem}) {
   const Searchelement=(input)=>{
     setsearch(input.target.value)
     getcategoryList(1,3,input.target.value)
+    setLoading(false)
   }
 
 
 
   return (
-//     <>
-// <Header
-//     title={"Categories List"}
-//     description={"You can now add your items that any user can order it from the Application and you can edit"}
-//     imgUrl={users}
-//     type={"Users"}
-//     // name={"Categories"}
-//     // add={"category"}
-//     />
-
-//     <div className="title d-flex justify-content-between px-3">
-//           <div className="title-info">
-//             <h2>Category Table Details</h2>
-//             <p>You can check all details</p>
-//           </div>
-//           <div className="btn">
-//             <button className='btn btn-success'onClick={handleAddShow}>Add New Category</button>
-//           </div>
-//         </div>
-
-//     {/* Models Edit */}
-//       <Modal show={show} onHide={handleClose}>
-//         <Modal.Header closeButton>
-
-//         </Modal.Header>
-//         <Modal.Body>
-//           <DeleteConfirmation deleteItem={"category"}/>
-//         </Modal.Body>
-//         <Modal.Footer>
-//           <Button variant="border border-danger text-danger" onClick={DeletItem}>
-//             Delete this item
-//           </Button>
-//         </Modal.Footer>
-//       </Modal>
-
-//       {/* models Add */}
-
-//       <Modal show={showAdd} onHide={handleAddClose}>
-//         <Modal.Header closeButton>
-//           Add Category
-//         </Modal.Header>
-//         <Modal.Body>
-//           <form onSubmit={handleSubmit(Addcategory)}>
-//         <InputGroup>
-//         <Form.Control
-//           type='text'
-//           placeholder="Category name"
-//           aria-label="Category"
-//           aria-describedby="basic-addon1"
-//           {...register("name",{required:"name is required"})}
-//         />     
-//       </InputGroup>
-//       {errors.name&&<p className='text-danger'>{errors.name.message}</p>}   
-//       <Modal.Footer>
-//           <Button type='submit' className='bg-success' onClick={Addcategory}>
-//             Save
-//           </Button>
-//         </Modal.Footer>
-//           </form>
-//         </Modal.Body>
-//       </Modal>
-
-//       {/* Update */}
-
-//       <Modal show={showupdate} onHide={handleupdateClose}>
-//         <Modal.Header closeButton>
-//           Update Category
-//         </Modal.Header>
-//         <Modal.Body>
-//           <form onSubmit={handleSubmit(UpdateItem)}>
-//         <InputGroup>
-//         <Form.Control
-//           type='text'
-//           placeholder="Category name"
-//           aria-label="Category"
-//           aria-describedby="basic-addon1"
-//           {...register("name",{required:"name is required"})}
-//         />     
-//       </InputGroup>
-//       {errors.name&&<p className='text-danger'>{errors.name.message}</p>}   
-//       <Modal.Footer>
-//           <Button type='submit' className='bg-success' onClick={UpdateItem}>
-//             Save
-//           </Button>
-//         </Modal.Footer>
-//           </form>
-//         </Modal.Body>
-//       </Modal>
-      
-// <div className="table-container p-3">
-// <div className="input-search my-2">
-//   <input className="form-control mr-sm-2 " style={{height:"40px"}} type="search" placeholder="Search here" aria-label="Search" onChange={Searchelement} />
-//   </div>
-//    {categoryList.length<=0 ? <Nodate/> :
-//     <table>
-//     <thead >
-//        <tr>
-//          <th scope="col">Id</th>
-//          <th scope="col">Name</th>
-//          <th scope="col">creationDate</th>
-//          <th scope="col">modificationDate</th>
-//          <th scope="col">Action</th>
-//        </tr>
-//      </thead>
-//      <tbody>
-//        {categoryList.map((CAT,index)=>(
-//          <tr key={index}>
-//          <th scope="col">{CAT.id}</th>
-//          <th scope="col">{CAT.name}</th>
-//          <th scope="col">{CAT.creationDate}</th>
-//          <th scope="col">{CAT.modificationDate}</th>
-//          <th scope="col">
-//          <Dropdown>
-//          <Dropdown.Toggle variant="light" className='Dropdown_Toggle'>
-//          <i className="fa-solid fa-ellipsis"></i>
-//          </Dropdown.Toggle>
-//          <Dropdown.Menu className="dropdown-menu">
-//            <Dropdown.Item href="#/action-1"><i style={{cursor:"pointer"}} className="fa-regular fa-eye text-success mx-3"></i>View</Dropdown.Item>
-//            <Dropdown.Item onClick={()=>handleupdateShow(CAT.id)} href="#/action-2"><i style={{cursor:"pointer"}} className="fa-solid fa-pen-to-square text-success mx-3"></i>Edit</Dropdown.Item>
-//            <Dropdown.Item onClick={()=>handleShow(CAT.id)}  href="#/action-3"><i style={{cursor:"pointer"}} className="fa-solid fa-trash text-success mx-3"></i>Delete</Dropdown.Item>
-//          </Dropdown.Menu>
-//        </Dropdown>
-//          </th>
-//        </tr>))}
-   
-//      </tbody>
-//      </table>
-//    }
-
-
-// </div>
-
-// <div className="pagination-container">
-//   <nav aria-label="Page navigation example">
-//     <ul className="pagination">
-//       <li className="page-item">
-//         <a className="page-link" href="#" aria-label="Previous">
-//           <span aria-hidden="true">&laquo;</span>
-//         </a>
-//       </li>
-//       {arrayofPages.map((pageNo) => (
-//         <li key={pageNo} className="page-item" onClick={() => getcategoryList(pageNo, 5)}>
-//           <a className="page-link" href="#">{pageNo}</a>
-//         </li>
-//       ))}
-//       <li className="page-item">
-//         <a className="page-link" href="#" aria-label="Next">
-//           <span aria-hidden="true">&raquo;</span>
-//         </a>
-//       </li>
-//     </ul>
-//   </nav>
-// </div>
-//     </>
-
 <>
   <Header
     title={"Categories List"}
@@ -368,12 +220,14 @@ export default function CategoriesList({deleteItem}) {
           {errors.name && <p className="text-danger">{errors.name.message}</p>}
           <Modal.Footer>
             <Button type="submit" className="bg-success w-100">
-              Save
+              Update
             </Button>
           </Modal.Footer>
         </form>
       </Modal.Body>
     </Modal>
+
+    {loading&&<Loading/>}
 
     {/* Table and Search */}
     <div className="table-responsive">
@@ -389,7 +243,7 @@ export default function CategoriesList({deleteItem}) {
       {categoryList.length <= 0 ? (
         <Nodate />
       ) : (
-        <table className="table table-hover">
+        <table>
           <thead>
             <tr>
               <th scope="col">Id</th>

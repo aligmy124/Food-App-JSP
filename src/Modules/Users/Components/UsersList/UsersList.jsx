@@ -10,6 +10,7 @@ import { BASE_IMG_URL, BASE_USERS, USERS_URL } from '../../../../constant/Api';
 import DeleteConfirmation from '../../../Shared/Components/DeleteConfirmation/DeleteConfirmation';
 import { useNavigate } from 'react-router-dom';
 import Nodate from '../../../Shared/Nodate/Nodate';
+import Loading from '../../../../Loading/Loading';
 
 export default function UsersList() {
   const token = localStorage.getItem("token")
@@ -21,6 +22,8 @@ export default function UsersList() {
   const [searchemail, setsearchemail] = useState("")
   const [searchcountry, setsearchcountry] = useState("")
   const [usersLogged, setusersLogged] = useState([])
+  // loading
+  const [loading, setloading] = useState(false)
 
   const handleClose = () => setShow(false);
   const handleShow = (id) => {
@@ -29,6 +32,7 @@ export default function UsersList() {
   };
 
   const getUsers = async (pageNo, pagesize, username, email, country, groups) => {
+    setloading(true)
     try {
         let res = await axios.get(USERS_URL.getUsers, {
             headers: {
@@ -49,25 +53,11 @@ export default function UsersList() {
     } catch (error) {
         console.log(error);
     }
+    finally{
+      setloading(false)
+    }
 }
 
-
-  // const DeleteItem = async () => {
-  //   try {
-  //     let res = await axios.delete(USERS_URL.delete(userId), {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     });
-  //     getUsers();
-  //     toast.success("Delete Successfully");
-  //     handleClose();
-  //   } catch (error) {
-  //     toast.error("Delete not Successfully");
-  //     handleClose();
-  //     console.log(error);
-  //   }
-  // };
 
   const DeleteItem = async () => {
     try {
@@ -88,26 +78,30 @@ export default function UsersList() {
   };
   
 
-
-  
-
 const serachByName = (input) => {
   setsearchname(input.target.value)
   getUsers(1, 50, input.target.value, searchemail, searchcountry, [1, 2])  // إضافة المعامل groups
+  setloading(false)
 }
 
 const serachByEmail = (input) => {
   setsearchemail(input.target.value)
   getUsers(1, 50, searchname, input.target.value, searchcountry, [1, 2])  // إضافة المعامل groups
+  setloading(false)
+
 }
 const serachByCountry = (input) => {
   setsearchcountry(input.target.value)
   getUsers(1, 50, searchname, searchemail, input.target.value, [1, 2])  // إضافة المعامل groups
+  setloading(false)
+
 }
 
 const serachByGroup = (input) => {
   const selectedGroups = Array.from(input.target.selectedOptions, option => option.value);
   getUsers(1, 50, searchname, searchemail, searchcountry, selectedGroups);
+  setloading(false)
+
 }
 
 
@@ -167,6 +161,8 @@ useEffect(() => {
         </select>
     </div>
     </div>
+
+    {loading&&<Loading/>}
 
 {usersLogged.length <= 0 ? <Nodate />
   :

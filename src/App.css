@@ -153,11 +153,6 @@ tr:hover {
       width: 150px; /* تقليل حجم الشعار في الشاشات الصغيرة */
     }
   }
-  /* sidbar */
-  /* ملف CSS الخاص بـ Sidebar */
-
-/* تنسيق لتجنب تداخل العناصر */
-/* تثبيت الـ Sidebar */
 .sidebar-fixed {
   position: fixed;
   top: 0;

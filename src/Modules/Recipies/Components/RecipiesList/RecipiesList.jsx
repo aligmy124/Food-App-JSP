@@ -45,6 +45,13 @@ export default function Recipieslist() {
     setid(id)
     setShow(true)
   };
+  //modale2
+  const [showview, setShowview] = useState(false);
+  const handleviewClose = () => setShowview(false);
+  const handleviewShow = (id) =>{
+    setid(id)
+    setShowview(true)
+  };
   //Tag
   const getallTags=async()=>{
     try {
@@ -98,6 +105,7 @@ export default function Recipieslist() {
         Authorization:`Bearer ${token}`
       }})
       console.log(res)
+      toast.success("Add suuccessfully")
       
     } catch (error) {
       console.log(error)
@@ -120,21 +128,6 @@ export default function Recipieslist() {
 
     }
   }
-
-  // const UpdateItem=async()=>{
-  //   try {
-  //     let res=await axios.put(RECIPES_URL.update(id),{headers:{
-  //       Authorization:`Bearer ${token}`
-  //     }})
-  //     getRecipes()
-  //     toast.success("Delete Successfully")
-  //     handleClose()
-  //   } catch (error) {
-  //     toast.error("Delete not Successfully")
-  //     handleClose()
-
-  //   }
-  // }
 
   const searchNameElement=(input)=>{
     setsearchname(input.target.value)
@@ -183,6 +176,8 @@ export default function Recipieslist() {
     </div>
   </div>
 
+  {/* model 1 */}
+
   <Modal show={show} onHide={handleClose}>
     <Modal.Header closeButton></Modal.Header>
     <Modal.Body>
@@ -194,6 +189,53 @@ export default function Recipieslist() {
       </Button>
     </Modal.Footer>
   </Modal>
+
+  {/* model 2 */}
+
+<Modal 
+  show={showview} 
+  onHide={handleviewClose}
+  size="lg" // تجعل المودال أكبر على الشاشات الكبيرة
+  fullscreen="md-down" // تجعل المودال يعرض بشكل كامل على الشاشات المتوسطة والصغيرة
+>
+  <Modal.Header closeButton></Modal.Header>
+  <Modal.Body>
+    <div className="title">
+      {recipy
+        .filter((item) => item.id === id)
+          // item.id : is all elements in recipe : امشي علي كل ايدي لو يوجد عنصر لهو نفس الايدي هاتو
+          // id: is id that I click on it
+        .map((item) => (
+          <div key={item.id} className="title-info">
+            <h2>name: {item.name}</h2>
+            <div className="img text-center py-3">
+              <img 
+                className='img-recipe img-fluid' 
+                src={`${BASE_IMG_URL}/${item.imagePath}`} 
+                alt="Recipe" 
+                style={{ maxWidth: '100%', height: 'auto', width: '100%' }} 
+              />
+            </div>
+            <div className="description">
+              <h4>description: {item.description}</h4>
+              <h3>price: {item.price}</h3>
+              <h3>Tag: {item.tag.name}</h3>
+            </div>
+            <Modal.Footer>
+              <Button 
+                variant="border border-danger text-danger" 
+                onClick={() => AddFavourite(item.id)}
+              >
+                Favourite
+              </Button>
+            </Modal.Footer>
+          </div>
+        ))}
+    </div>
+  </Modal.Body>
+</Modal>
+
+
 
   <div className="table-container p-3">
   <div className="row mb-3 justify-content-center">
@@ -237,7 +279,7 @@ export default function Recipieslist() {
               <th scope="col">Price</th>
               <th scope="col">Description</th>
               <th scope="col">Tag</th>
-              {loginData?.userGroup === "SuperAdmin" && <th scope="col"></th>}
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
@@ -257,15 +299,15 @@ export default function Recipieslist() {
                 {loginData?.userGroup==="SuperAdmin"? 
                 <td>
                 <Dropdown>
-                  <Dropdown.Toggle variant="light" className='Dropdown_Toggle'>
+                  <Dropdown.Toggle variant="none" className='Dropdown_Toggle'>
                     <i className="fa-solid fa-ellipsis"></i>
                   </Dropdown.Toggle>
                   <Dropdown.Menu className="dropdown-menu">
-                    <Dropdown.Item href="#/action-1">
+                    <Dropdown.Item onClick={()=>handleviewShow(RCP.id)}>
                       <i className="fa-regular fa-eye text-success mx-2"></i>View
                     </Dropdown.Item>
                     <Dropdown.Item as={Link} to={`/dashboard/Recipy_edit/${RCP.id}`} state={{ AddRecipy: RCP, type: "edit" }}>
-                      <i className="fa-regular fa-edit text-success mx-2"></i>Update
+                      <i className="fa-regular fa-edit text-success mx-2"></i>Edit
                     </Dropdown.Item>
 
                     {loginData?.userGroup !== "SystemUser" && (

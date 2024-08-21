@@ -16,7 +16,7 @@ export default function UsersList() {
   const token = localStorage.getItem("token")
   const nav = useNavigate()
   const [show, setShow] = useState(false);
-  const [userId, setuserId] = useState(false);
+  const [userId, setuserId] = useState([]);
   const [ArrayofPages, setArrayofPages] = useState([])
   const [searchname, setsearchname] = useState("")
   const [searchemail, setsearchemail] = useState("")
@@ -24,11 +24,19 @@ export default function UsersList() {
   const [usersLogged, setusersLogged] = useState([])
   // loading
   const [loading, setloading] = useState(false)
-
+// model 1
   const handleClose = () => setShow(false);
   const handleShow = (id) => {
     setuserId(id)
     setShow(true)
+  };
+  // model 2
+  const [showview, setShowview] = useState(false);
+  const handleviewClose = () => setShowview(false);
+  const handleviewShow = (id) =>{
+    alert(id)
+    setuserId(id)
+    setShowview(true)
   };
 
   const getUsers = async (pageNo, pagesize, username, email, country, groups) => {
@@ -128,7 +136,7 @@ useEffect(() => {
           <button className='btn btn-success' onClick={() => nav("/dashboard/Add_User")}>Add New Users</button>
         </div>
       </div>
-
+      {/* model 1 */}
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
         </Modal.Header>
@@ -141,6 +149,34 @@ useEffect(() => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {/* model 2 */}
+
+      <Modal show={showview} onHide={handleviewClose}>
+  <Modal.Header closeButton>
+  </Modal.Header>
+  <Modal.Body>
+    <div className="title mb-3">
+      {usersLogged.filter((item) => item.id === userId).map((item, id) => (
+        <div key={id} className="title-info">
+          <h2 className="text-center text-sm-left">Name: {item.userName}</h2>
+          <div className="img text-center py-3">
+            <img
+              className="img-user img-fluid"
+              src={`${BASE_IMG_URL}/${item.imagePath}`}
+              alt="User Image"
+              style={{ maxWidth: '100%', height: 'auto' }}
+            />
+          </div>
+          <h5 className="text-center text-sm-left">Email: {item.email}</h5>
+          <h5 className="text-center text-sm-left">Country: {item.country}</h5>
+          <h5 className="text-center text-sm-left">Phone Number: {item.phoneNumber}</h5>
+        </div>
+      ))}
+    </div>
+  </Modal.Body>
+</Modal>
+
 
       <div className='table-container p-3 text-center'>
         <div className="row my-2">
@@ -195,7 +231,7 @@ useEffect(() => {
                 <i className="fa-solid fa-ellipsis"></i>
               </Dropdown.Toggle>
               <Dropdown.Menu className="dropdown-menu">
-                <Dropdown.Item href="#/action-1"><i style={{ cursor: "pointer" }} className="fa-regular fa-eye text-success mx-3"></i>View</Dropdown.Item>
+                <Dropdown.Item onClick={()=>handleviewShow(user.id)} href="#/action-1"><i style={{ cursor: "pointer" }} className="fa-regular fa-eye text-success mx-3"></i>View</Dropdown.Item>
                 {user.group.name==="SystemUser" && 
                 <Dropdown.Item onClick={() => handleShow(user.id)} href="#/action-3"><i style={{ cursor: "pointer" }} className="fa-solid fa-trash text-success mx-3"></i>Delete</Dropdown.Item>
                 }

@@ -43,6 +43,6 @@ export const FAVOURITE_URL={
 /*Update GitHup:
 git status
 git add .
-git commit -m "
+git commit -m "newnetlify"
 git push origin main
 */  

@@ -1,21 +1,23 @@
-# example netlify.toml
 [build]
-  command = "# no build command"
-  functions = "netlify/functions"
-  publish = "npm run build"
+  # أمر البناء (build command) المستخدم لتجميع المشروع
+  command = "npm run build"
+  
+  # المجلد الذي سيتم نشره بعد البناء (publish directory)
+  publish = "build"
 
-  ## Uncomment to use this redirect for Single Page Applications like create-react-app.
-  ## Not needed for static site generators.
-  #[[redirects]]
-  #  from = "/*"
-  #  to = "/index.html"
-  #  status = 200
+  # إذا كان مشروعك في مجلد فرعي، أضف المسار هنا (Base directory)
+  # base = "path/to/your/subdirectory"
 
-  ## (optional) Settings for Netlify Dev
-  ## https://github.com/netlify/cli/blob/main/docs/netlify-dev.md#project-detection
-  #[dev]
-  #  command = "yarn start" # Command to start your dev server
-  #  port = 3000 # Port that the dev server will be listening on
-  #  publish = "dist" # Folder with the static content for _redirect file
+[build.environment]
+  # إذا كنت بحاجة إلى متغيرات بيئة خاصة بالبناء، يمكنك إضافتها هنا
+  NODE_ENV = "production"
 
-  ## more info on configuring this file: https://ntl.fyi/file-based-build-config
+# إعدادات اختيارية للوظائف (functions) إذا كنت تستخدم وظائف Netlify
+[functions]
+  directory = "netlify/functions"
+
+# يمكنك إضافة إعدادات لإعادة التوجيهات (redirects) هنا إذا لزم الأمر
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

@@ -34,7 +34,6 @@ export default function UsersList() {
   const [showview, setShowview] = useState(false);
   const handleviewClose = () => setShowview(false);
   const handleviewShow = (id) =>{
-    alert(id)
     setuserId(id)
     setShowview(true)
   };

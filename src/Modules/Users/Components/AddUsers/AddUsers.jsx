@@ -29,39 +29,6 @@ export default function AddUsers() {
   }
 }
 
-
-// create
-const createUser=async(data)=>{
-  let recipyData=appendFormdata(data)
-  try {
-      let res=await axios.post(USERS_URL.create,recipyData,
-      {headers:{
-          Authorization:`Bearer ${token}`
-      }})
-      console.log(res)
-      console.log(data)
-      toast.success("Add successfully")
-      
-  } catch (error) {
-      console.log(error)
-      toast.error("Add not successfully")
-      
-  }
-}
-
-
-// const appendFormdata = (data) => {
-//   const formData = new FormData();
-//   formData.append("userName", data.userName);  
-//   formData.append("email", data.email);  
-//   formData.append("recipeImage", data.recipeImage[0]);
-//   formData.append("phoneNumber", data.phoneNumber);  
-//   formData.append("country", data.country);
-//   formData.append("password", data.password);
-//   formData.append("confirmPassword", data.confirmPassword );
-//   return formData;
-// }
-
 const appendFormdata = (data) => {
   const formData = new FormData();
   formData.append("userName", data.userName);  
@@ -73,6 +40,29 @@ const appendFormdata = (data) => {
   formData.append("confirmPassword", data.confirmPassword);
   return formData;
 }
+
+
+// create
+const createUser=async(data)=>{
+  let recipyData=appendFormdata(data)
+  try {
+      let res=await axios.post(USERS_URL.create,recipyData,
+      {headers:{
+          Authorization:`Bearer ${token}`
+      }})
+      console.log(res)
+      console.log(data)
+      nav("/dashboard/UsersList")
+      toast.success("Add successfully")
+  } catch (error) {
+      console.log(error)
+      toast.error("Add not successfully")
+      
+  }
+}
+
+
+
 
 
 
@@ -212,7 +202,7 @@ useEffect(()=>{
 
       <div className="d-flex flex-column flex-md-row justify-content-md-end mt-4">
         <button onClick={() => nav("/dashboard/UsersList")} type="button" className="btn btn-outline-success me-3">Cancel</button>
-        <button type="submit" className="btn btn-success" onClick={() => nav("/dashboard/UsersList")}>Save</button>
+        <button type="submit" className="btn btn-success">Save</button>
       </div>
     </div>
   </form>

@@ -86,7 +86,7 @@ const appendFormdata = (data) => {
         console.log(res)
         console.log(data)
         toast.success("Add successfully")
-        
+        nav("/dashboard/RecipiesList")
     } catch (error) {
         console.log(error)
         toast.error("Add not successfully")

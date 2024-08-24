@@ -15,3 +15,4 @@ Currently, two official plugins are available:
 # Joe
 # Restaurant
 # Food-App-JSP
+# Food-App-JSP

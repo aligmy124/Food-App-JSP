@@ -159,7 +159,7 @@ code:e4ad
         display: 'block',
         padding: '10px',
         border: '2px dashed rgba(0, 128, 0, 0.5)',
-        backgroundColor: 'rgba(217, 217, 217, 1)',
+        backgroundColor: 'rgba(240, 255, 239, 1)',
         borderRadius: '5px',
         textAlign: 'center',
         cursor: 'pointer',

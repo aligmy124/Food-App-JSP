@@ -129,27 +129,26 @@ const appendFormdata = (data) => {
   </div>
 
   <form className='container w-75 mx-auto p-3 p-md-5' onSubmit={handleSubmit(createRecipy)}>
-    <div className="mb-3">
-      <InputGroup>
-        <Form.Control
-          style={{backgroundColor:"rgba(217, 217, 217, 1)"}}
-          type='text'
-          placeholder="Recipe Name"
-          aria-label="name"
-          aria-describedby="basic-addon1"
-          {...register("name", {
-            required: "Name is required"
-          })}
-          defaultValue={status?recipeData.name:""}
-        />
-      </InputGroup>
-      {errors.name && <p className='text-danger'>{errors.name.message}</p>}
-    </div>
-
+  <div className="mb-3">
+  <InputGroup>
+    <Form.Control
+      style={{ backgroundColor: "#f8f9fa" }}
+      type="text"
+      placeholder="Recipe Name"
+      aria-label="name"
+      aria-describedby="basic-addon1"
+      {...register("name", {
+        required: "Name is required"
+      })}
+      defaultValue={status ? recipeData.name : ""}
+    />
+  </InputGroup>
+  {errors.name && <p className="text-danger">{errors.name.message}</p>}
+</div>
     <div className="mb-3">
       <Form.Select
         aria-label="Default select example"
-        style={{backgroundColor:"rgba(217, 217, 217, 1)"}}
+        style={{backgroundColor:"#f8f9fa"}}
         {...register("tagId", {
           required: "Tag is required"
         })}
@@ -167,7 +166,7 @@ const appendFormdata = (data) => {
     <div className="mb-3">
       <InputGroup>
         <Form.Control
-          style={{backgroundColor:"rgba(217, 217, 217, 1)"}}
+          style={{backgroundColor:"#f8f9fa"}}
           type='text'
           placeholder="Price"
           aria-label="price"
@@ -190,7 +189,7 @@ const appendFormdata = (data) => {
         onChange={(e)=>setcategoryId(e.target.value)}
 
         aria-label="Default select example"
-        style={{backgroundColor:"rgba(217, 217, 217, 1)"}}
+        style={{backgroundColor:"#f8f9fa"}}
       >
         {categoryList.map((item, index) => (
           <option key={index} value={item.id}>{item.name}</option>
@@ -204,7 +203,7 @@ const appendFormdata = (data) => {
         <Form.Control
           as="textarea"
           placeholder="Leave a comment here"
-          style={{height: '100px', backgroundColor:"rgba(217, 217, 217, 1)"}}
+          style={{height: '100px', backgroundColor:"#f8f9fa"}}
           {...register("description", {
             required: "Description is required"
           })}
@@ -219,7 +218,7 @@ const appendFormdata = (data) => {
         display: 'block',
         padding: '10px',
         border: '2px dashed rgba(0, 128, 0, 0.5)',
-        backgroundColor: 'rgba(217, 217, 217, 1)',
+        backgroundColor: 'rgba(240, 255, 239, 1)',
         borderRadius: '5px',
         textAlign: 'center',
         cursor: 'pointer',

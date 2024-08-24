@@ -320,7 +320,7 @@ export default function Recipieslist() {
               </td>
               :
               <td>
-                <i className="fa-solid fa-heart text-danger"onClick={()=>AddFavourite(RCP.id)}></i>
+                <i style={{cursor:"pointer"}} className="fa-solid fa-heart text-danger"onClick={()=>AddFavourite(RCP.id)}></i>
               </td>
                 }
 

@@ -26,9 +26,24 @@ code:e4ad
     watch, // Make sure watch is destructured if you're using it for validation
   } = useForm();
 
+
+  const appendFormdata = (data) => {
+    const formData = new FormData();
+    formData.append("userName", data.userName);
+    formData.append("country", data.country); 
+    formData.append("password", data.password);  
+    formData.append("profileImage", data.profileImage[0]);
+    formData.append("email", data.email);  
+    formData.append("phoneNumber", data.phoneNumber);
+    formData.append("confirmPassword", data.confirmPassword);
+    return formData;
+  }
+  
+
   const submitRgs = async (data) => {
+    let recipyData=appendFormdata(data)
     try {
-      let res = await axios.post(USERS_URL.register, data);
+      let res = await axios.post(USERS_URL.register, recipyData);
       console.log(res);
       nav("/Verfiy_register")
       toast.success(Response.data.message)
@@ -138,6 +153,35 @@ code:e4ad
               {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
             </InputGroup>
           </div>
+          <div className="m-auto">
+      <Form.Group controlId="formFile" className="my-4" style={{position: 'relative'}}>
+      <Form.Label style={{
+        display: 'block',
+        padding: '10px',
+        border: '2px dashed rgba(0, 128, 0, 0.5)',
+        backgroundColor: 'rgba(217, 217, 217, 1)',
+        borderRadius: '5px',
+        textAlign: 'center',
+        cursor: 'pointer',
+        color: '#28a745',
+        fontSize: '18px'
+      }}>
+        Drag & Drop or <span style={{textDecoration: 'underline'}}>Choose an Item Image to Upload</span>
+        <Form.Control type="file" {...register("profileImage", {
+          required: "Image is required"
+        })} style={{
+          opacity: 0,
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          cursor: 'pointer'
+        }} />
+      </Form.Label>
+      {errors.recipeImage && <p className='text-danger'>{errors.recipeImage.message}</p>}
+    </Form.Group>
+    </div>
         </div>
         <button type="submit" className="btn btn-success d-block w-100 my-3">Register</button>
       </form>

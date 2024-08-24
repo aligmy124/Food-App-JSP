@@ -8,9 +8,10 @@ import { MenuContext } from '../../../../Window/MenueContext';
 
 export default function Sidebar() {
     // Window
+    
     const wind = useContext(Window);
     const size = wind.windowSize;
-    
+
     // Menu
     const bar = useContext(MenuContext);
     const isOpen = bar.isOpen;
